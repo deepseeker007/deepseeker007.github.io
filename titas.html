@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titas - Study Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #f5f5f5;
+            --accent: #2563eb;
+            --accent-light: #3b82f6;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border: #e5e5e5;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Timer Section */
+        .timer-display {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 64px;
+            font-weight: 700;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--accent);
+            letter-spacing: -2px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-input {
+            width: 70px;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'IBM Plex Mono', monospace;
+            transition: border-color 0.2s;
+        }
+
+        .timer-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .button {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .button-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+        }
+
+        .button-primary:active {
+            transform: translateY(0);
+        }
+
+        .button-secondary {
+            background: var(--secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .button-secondary:hover {
+            background: #f0f0f0;
+            border-color: var(--text-primary);
+        }
+
+        .button-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Study Hours */
+        .study-hours {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .hours-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--success);
+            margin: 15px 0;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .hours-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .hours-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Todo List */
+        .todo-container {
+            grid-column: 1 / -1;
+        }
+
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .date-display {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .todo-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .todo-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .todo-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--secondary);
+            border-radius: 8px;
+            transition: all 0.2s;
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .todo-item:hover {
+            background: #efefef;
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .todo-delete {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .todo-delete:hover {
+            color: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+
+        /* Scrollbar styling */
+        .todo-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .todo-list::-webkit-scrollbar-track {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+
+        .todo-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .todo-list::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-display {
+                font-size: 48px;
+            }
+
+            .hours-value {
+                font-size: 36px;
+            }
+
+            header {
+                margin-bottom: 30px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">titas</div>
+            <div class="tagline">focus. track. succeed.</div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Timer Card -->
+            <div class="card">
+                <div class="section-title">Study Timer</div>
+                <div class="timer-controls">
+                    <input type="number" id="minutes" class="timer-input" min="0" max="999" value="25" placeholder="Min">
+                    <input type="number" id="seconds" class="timer-input" min="0" max="59" value="0" placeholder="Sec">
+                </div>
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <button class="button button-primary" id="startBtn" onclick="startTimer()">Start</button>
+                    <button class="button button-secondary button-small" id="pauseBtn" onclick="pauseTimer()">Pause</button>
+                    <button class="button button-secondary button-small" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+
+            <!-- Study Hours Card -->
+            <div class="card">
+                <div class="section-title">Today's Study Time</div>
+                <div class="study-hours">
+                    <div class="hours-label">Total Hours</div>
+                    <div class="hours-value" id="totalHours">0.0</div>
+                    <div class="hours-label" id="minutesLabel">0 minutes</div>
+                </div>
+                <div class="hours-controls">
+                    <button class="button button-secondary button-small" onclick="addStudyTime(15)">+15 min</button>
+                    <button class="button button-secondary button-small" onclick="addStudyTime(30)">+30 min</button>
+                    <button class="button button-secondary button-small" onclick="addStudyTime(60)">+1 hr</button>
+                    <button class="button button-secondary button-small" onclick="resetStudyTime()">Reset</button>
+                </div>
+            </div>
+
+            <!-- Todo List Card -->
+            <div class="card todo-container">
+                <div class="todo-header">
+                    <div class="section-title" style="margin: 0;">Today's Tasks</div>
+                    <div class="date-display" id="dateDisplay"></div>
+                </div>
+                <div class="todo-input-group">
+                    <input type="text" class="todo-input" id="todoInput" placeholder="Add a new task...">
+                    <button class="button button-primary" onclick="addTodo()">Add</button>
+                </div>
+                <div id="todoContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">No tasks yet. Add one to get started!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer variables
+        let timerInterval = null;
+        let totalSeconds = 0;
+        let isRunning = false;
+
+        // Study time tracking
+        let studyMinutes = 0;
+
+        // Initialize date display
+        function updateDateDisplay() {
+            const options = { weekday: 'long', month: 'short', day: 'numeric' };
+            const today = new Date().toLocaleDateString('en-US', options);
+            document.getElementById('dateDisplay').textContent = today;
+        }
+
+        // Timer functions
+        function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            
+            const mins = parseInt(document.getElementById('minutes').value) || 0;
+            const secs = parseInt(document.getElementById('seconds').value) || 0;
+            
+            if (totalSeconds === 0) {
+                totalSeconds = mins * 60 + secs;
+            }
+            
+            if (totalSeconds <= 0) return;
+            
+            isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('minutes').disabled = true;
+            document.getElementById('seconds').disabled = true;
+            
+            timerInterval = setInterval(() => {
+                totalSeconds--;
+                updateTimerDisplay();
+                
+                if (totalSeconds <= 0) {
+                    pauseTimer();
+                    addStudyTime(Math.floor((parseInt(document.getElementById('minutes').value) * 60 + parseInt(document.getElementById('seconds').value)) / 60));
+                    alert('Study session complete! Great work! 🎉');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('minutes').disabled = false;
+            document.getElementById('seconds').disabled = false;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            totalSeconds = 0;
+            document.getElementById('minutes').value = '25';
+            document.getElementById('seconds').value = '0';
+            updateTimerDisplay();
+        }
+
+        // Study time functions
+        function updateStudyDisplay() {
+            const hours = (studyMinutes / 60).toFixed(1);
+            document.getElementById('totalHours').textContent = hours;
+            document.getElementById('minutesLabel').textContent = `${studyMinutes} minutes`;
+        }
+
+        function addStudyTime(minutes) {
+            studyMinutes += minutes;
+            updateStudyDisplay();
+        }
+
+        function resetStudyTime() {
+            studyMinutes = 0;
+            updateStudyDisplay();
+        }
+
+        // Todo functions
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const todos = getTodos();
+            const newTodo = {
+                id: Date.now(),
+                text: text,
+                completed: false
+            };
+            
+            todos.push(newTodo);
+            saveTodos(todos);
+            input.value = '';
+            renderTodos();
+        }
+
+        function toggleTodo(id) {
+            const todos = getTodos();
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                saveTodos(todos);
+                renderTodos();
+            }
+        }
+
+        function deleteTodo(id) {
+            let todos = getTodos();
+            todos = todos.filter(t => t.id !== id);
+            saveTodos(todos);
+            renderTodos();
+        }
+
+        function getTodos() {
+            const today = new Date().toDateString();
+            const data = JSON.parse(localStorage.getItem('titas_data') || '{}');
+            return data[today] || [];
+        }
+
+        function saveTodos(todos) {
+            const today = new Date().toDateString();
+            const data = JSON.parse(localStorage.getItem('titas_data') || '{}');
+            data[today] = todos;
+            localStorage.setItem('titas_data', JSON.stringify(data));
+        }
+
+        function renderTodos() {
+            const todos = getTodos();
+            const container = document.getElementById('todoContainer');
+            
+            if (todos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">No tasks yet. Add one to get started!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="todo-list">
+                    ${todos.map(todo => `
+                        <div class="todo-item ${todo.completed ? 'completed' : ''}">
+                            <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} 
+                                   onchange="toggleTodo(${todo.id})">
+                            <span class="todo-text">${escapeHtml(todo.text)}</span>
+                            <button class="todo-delete" onclick="deleteTodo(${todo.id})">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Allow Enter key to add todo
+        document.getElementById('todoInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+
+        // Initialize
+        updateDateDisplay();
+        renderTodos();
+        updateTimerDisplay();
+        updateStudyDisplay();
+    </script>
+</body>
+</html>
